@@ -26,9 +26,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="twitter:card" content="Tales and Pages" />
         <meta name="twitter:title" content="Tales and Pages" />
         <meta name="twitter:description" content="Pages full of Tales" />
-        <meta name="twitter:image" content="/logo.png" />  {/* Same logo for Twitter */}
+        <meta name="twitter:image" content="/logo.png" />  
       </head>
-      <body>
+      <body>ß
         {children}
         <ScrollRestoration />
         <Scripts />
