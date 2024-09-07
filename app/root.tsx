@@ -18,7 +18,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content="Tales and Pages" />
         <meta property="og:description" content="Pages full of Tales" />
-        <meta property="og:image" content="/logo.png" />  
+        <meta property="og:image" content="/talesandpages.png" />  
         <meta property="og:url" content="https://talesandpages.com" />
         <meta property="og:type" content="website" />
 
@@ -26,9 +26,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="twitter:card" content="Tales and Pages" />
         <meta name="twitter:title" content="Tales and Pages" />
         <meta name="twitter:description" content="Pages full of Tales" />
-        <meta name="twitter:image" content="/logo.png" />  
+        <meta name="twitter:image" content="/talesandpages.png" />  
       </head>
-      <body>ß
+      <body>
         {children}
         <ScrollRestoration />
         <Scripts />
