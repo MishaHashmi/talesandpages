@@ -17,12 +17,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        
-      <div className="h-screen flex items-center justify-center">
-      <div className="text-6xl text-center font-bold text-orange-200">
-          TALES AND PAGES
-      </div>
-      </div>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
