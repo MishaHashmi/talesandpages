@@ -83,3 +83,11 @@ pages_build_output_dir = "./build/client"
 # [[env.production.kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
 # id = "<PRODUCTION_NAMESPACE_ID>"
+
+
+[env.production]
+compatibility_flags = ["nodejs_compat_v2"]
+
+[env.preview]
+compatibility_flags = ["nodejs_compat_v2"]
+

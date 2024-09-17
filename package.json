@@ -18,7 +18,9 @@
     "@remix-run/cloudflare": "^2.11.1",
     "@remix-run/cloudflare-pages": "^2.11.1",
     "@remix-run/react": "^2.11.1",
+    "crypto-js": "^4.2.0",
     "isbot": "^4.1.0",
+    "jose": "^5.9.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

@@ -13,7 +13,8 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div className="h-dvh flex flex-col items-center justify-center">
-      <img src="/talesandpages.png" alt="Logo" className="block h-36 w-36" />
+      <a href="/login"  className="text-2xl text-center text-orange-200" >Log In</a>
+      <a href="/dashboard"  className="text-2xl text-center text-teal-100" >Dashboard</a>
       <div className="text-6xl text-center font-bold text-orange-200  transition ease-in-out delay-150 duration-1000 hover:text-teal-100 ">
       
           TALES AND PAGES
