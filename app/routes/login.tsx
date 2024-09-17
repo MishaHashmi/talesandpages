@@ -1,23 +1,22 @@
 import { Form, useSearchParams } from "@remix-run/react";
-import { ActionFunction, redirect } from "@remix-run/node";
 import { sendMagicLink } from "~/utils/auth.server";
 import { useEffect, useState } from "react";
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
   const email = formData.get("email");
 
   if (typeof email === "string") {
     try {
       await sendMagicLink(email);
-      return redirect("/login?status=success");
+      return new Response(null, { status: 302, headers: { Location: "/login?status=success" } });
     } catch (error) {
       console.error("Error sending magic link:", error);
-      return redirect("/login?status=error");
+      return new Response(null, { status: 302, headers: { Location: "/login?status=error" } });
     }
   }
 
-  return redirect("/login?status=invalid");
+  return new Response(null, { status: 302, headers: { Location: "/login?status=invalid" } });
 };
 
 export default function LoginPage() {

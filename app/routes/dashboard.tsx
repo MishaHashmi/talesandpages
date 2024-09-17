@@ -1,26 +1,26 @@
-// app/routes/dashboard.tsx
-
-import { LoaderFunction, redirect } from "@remix-run/node";
-import { getSession } from "~/sessions";
 import { useLoaderData } from "@remix-run/react";
+import { getSession } from "~/sessions";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader(request: Request): Promise<Response> {
   // Get the session from cookies
-  const cookieHeader = request.headers.get("Cookie");
+
+  // console.log(request);
+  const cookieHeader = request.request.headers.get("Cookie");
   const session = await getSession(cookieHeader);
-  console.log("dashboard session: ", session);
+  
 
   // Check if the user is authenticated (i.e., if a "user" is stored in the session)
   const user = session?.data["user"];
-  console.log("dashboard user: ", user);
 
   if (!user) {
-    return redirect("/login");
+    return Response.redirect("/login", 302);
   }
 
   // Return the user data to be used in the component
-  return { user };
-};
+  return new Response(JSON.stringify({ user }), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
 
 export default function Dashboard() {
   // Retrieve the user data from the loader

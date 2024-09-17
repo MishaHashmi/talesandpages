@@ -1,26 +1,36 @@
-import { LoaderFunction, redirect } from "@remix-run/node";
 import { verifyToken } from "~/utils/token.server";
 import { createSession } from "~/sessions";
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const token = url.searchParams.get("token");
+export async function loader(request: Request): Promise<Response> {
+  try {
+    // Extract query parameters from the URL
+    console.log("req: ",request.request.url);
+    const url = new URL(request.request.url);
+    console.log("URL:         ",url);
+    const token = url.searchParams.get("token");
+    console.log("token:         ",token);
 
-  if (token) {
-    const secret = import.meta.env.VITE_SESSION_SECRET;
-    if (!secret) {
-      console.error("SESSION_SECRET is not defined");
-      return redirect("/login?status=error");
+    if (token) {
+      // Retrieve secret from environment variables
+      const secret = import.meta.env.VITE_SESSION_SECRET;
+      if (!secret) {
+        console.error("SESSION_SECRET is not defined");
+        return Response.redirect("/login?status=error", 302);
+      }
+
+      // Verify token and create a session if valid
+      const payload = verifyToken(token, secret);
+
+      if (payload && payload.email) {
+        console.log("magic-link: ", payload);
+        return createSession(payload.email, "/dashboard");
+      }
     }
 
-    const payload = verifyToken(token, secret);
-    
+    return Response.redirect("/login?status=invalid", 302);
 
-    if (payload && payload.email) {
-      console.log("magic-link: ", payload);
-      return createSession(payload.email, "/dashboard");
-    }
+  } catch (error) {
+    console.error("Error in loader:", error);
+    return Response.redirect("/login?status=error", 302);
   }
-
-  return redirect("/login?status=invalid");
-};
+}

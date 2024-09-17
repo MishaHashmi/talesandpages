@@ -17,4 +17,9 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  build: {
+    rollupOptions: {
+      external: ['crypto', 'stream'], // Exclude these modules from the bundle
+    },
+  },
 });
