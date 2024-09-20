@@ -29,6 +29,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="twitter:image" content="/talesandpages.png" />  
       </head>
       <body>
+      <div className="text-4xl text-center font-bold text-orange-200 transition ease-in-out delay-150 duration-1000 hover:text-teal-100 py-4">
+        <a href="/">TALES AND PAGES</a>
+      </div>
         {children}
         <ScrollRestoration />
         <Scripts />

@@ -1,19 +1,18 @@
 import { createToken } from "./token.server";
 import { sendEmail } from "./email.server";
+import { getUserOrCreate } from './database.server'; // Use the database server for user lookup
 
 export async function sendMagicLink(email: string) {
   const secret = import.meta.env.VITE_SESSION_SECRET;
-  console.log("auth.server secret:", secret);
   if (!secret) {
     throw new Error("SESSION_SECRET is not defined");
   }
 
-  // Ensure valid email format
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Invalid email format");
-  }
+  // Use the database server to find or create the user
+  const user = await getUserOrCreate(email);
 
-  const token = createToken({ email }, secret);
+  // Create a token with the user's email
+  const token = createToken({ email: user.email }, secret);
   const magicLink = `https://talesandpages.com/magic-link?token=${token}`;
 
   console.log("Generated Magic Link:", magicLink); // Debugging log

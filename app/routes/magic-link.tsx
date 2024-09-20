@@ -1,29 +1,41 @@
 import { verifyToken } from "~/utils/token.server";
-import { createSession } from "~/sessions";
+import { createEmptySession, commitSession } from "~/sessions";
+import { getUserOrCreate } from "~/utils/database.server"; // Adjust the import path as necessary
 
-export async function loader(request: Request): Promise<Response> {
+export async function loader({ request }: { request: Request }): Promise<Response> {
   try {
-    // Extract query parameters from the URL
-    console.log("req: ",request.request.url);
-    const url = new URL(request.request.url);
-    console.log("URL:         ",url);
+    // console.log("magic-link request ", request);
+    const url = new URL(request.url);
+    // console.log("magic-link url ", url);
     const token = url.searchParams.get("token");
-    console.log("token:         ",token);
+    // console.log("magic-link token: ", token);
 
     if (token) {
-      // Retrieve secret from environment variables
       const secret = import.meta.env.VITE_SESSION_SECRET;
       if (!secret) {
         console.error("SESSION_SECRET is not defined");
         return Response.redirect("/login?status=error", 302);
       }
 
-      // Verify token and create a session if valid
       const payload = verifyToken(token, secret);
 
       if (payload && payload.email) {
-        console.log("magic-link: ", payload);
-        return createSession(payload.email, "/dashboard");
+        // Use database.server to get or create the user
+        const user = await getUserOrCreate(payload.email);
+        const username = user.username; // Adjust based on how your user object is structured
+
+        // Create a session with email and username
+        const session = createEmptySession();
+        session.set("user", payload.email);
+        session.set("username", username);
+
+        return new Response(null, {
+          headers: {
+            "Set-Cookie": await commitSession(session),
+            "Location": "/dashboard",
+          },
+          status: 302,
+        });
       }
     }
 
@@ -34,3 +46,4 @@ export async function loader(request: Request): Promise<Response> {
     return Response.redirect("/login?status=error", 302);
   }
 }
+

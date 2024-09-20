@@ -2,6 +2,10 @@
 name = "talesandpages"
 compatibility_date = "2024-09-03"
 pages_build_output_dir = "./build/client"
+#main = "./build/server/index.js" 
+##type = "module"
+
+
 
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Pages Function, running it closer to your back-end infrastructure
@@ -90,4 +94,9 @@ compatibility_flags = ["nodejs_compat"]
 
 [env.preview]
 compatibility_flags = ["nodejs_compat"]
+
+
+# account_id = "69e550477ad507d1582649dace41f463"
+# workers_dev = true
+
 

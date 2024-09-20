@@ -1,38 +1,45 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";import { useLoaderData, Link } from "@remix-run/react";
 import { getSession } from "~/sessions";
 
-export async function loader(request: Request): Promise<Response> {
-  // Get the session from cookies
-
-  // console.log(request);
-  const cookieHeader = request.request.headers.get("Cookie");
+export async function loader({ request }: { request: Request }): Promise<Response> {
+  const cookieHeader = request.headers.get("Cookie");
+  // console.log("dashboard cookie: ", cookieHeader);
   const session = await getSession(cookieHeader);
-  
+  // console.log("dashboard session: ", session);
+  const user = session.get("user");
+  // console.log("dashboard user: ", user);
+  const username = session.get("username");
 
-  // Check if the user is authenticated (i.e., if a "user" is stored in the session)
-  const user = session?.data["user"];
-
+  // If user is not authenticated, just return a response indicating that
   if (!user) {
-    return Response.redirect("/login", 302);
+    return new Response(JSON.stringify({ loggedIn: false }), {
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
-  // Return the user data to be used in the component
-  return new Response(JSON.stringify({ user }), {
+  return new Response(JSON.stringify({ user, username }), {
     headers: { "Content-Type": "application/json" },
   });
 }
 
 export default function Dashboard() {
-  // Retrieve the user data from the loader
-  const { user } = useLoaderData<{ user: string }>();
+  const { user, username } = useLoaderData<{ user: string; username: string }>();
+
+  if (!user) {
+    return (
+      <div>
+        <h1 className="text-2xl text-center text-orange-200">Login to view dashboard</h1>
+        <Link to="/login" className="block text-center text-green-300">Login</Link>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <div className="text-6xl text-center font-bold text-orange-200 transition ease-in-out delay-150 duration-1000 hover:text-teal-100 py-8">
-        TALES AND PAGES
-      </div>
       <h1 className="text-2xl text-center text-orange-200">Welcome to your dashboard!</h1>
-      <h2 className="text-1xl text-center font-bold text-teal-100">{user}</h2>
+      <h2 className="text-1xl text-center font-bold text-sky-200">{username}</h2>
+      <p className="text-center font-bold text-sky-200">{user}</p>
+      <Link to="/logout" className="block text-center text-red-300">Logout</Link>
     </div>
   );
 }
