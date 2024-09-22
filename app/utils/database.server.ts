@@ -16,6 +16,5 @@ export async function getUserOrCreate(email) {
   }
 
   const user = await response.json();
-  console.log("database.server user", user);
   return user;
 }
