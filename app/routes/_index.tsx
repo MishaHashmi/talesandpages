@@ -12,13 +12,21 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div className="h-dvh flex flex-col items-center justify-center">
-      <a href="/login"  className="text-2xl text-center text-orange-200" >Log In</a>
-      <a href="/dashboard"  className="text-2xl text-center text-teal-100" >Dashboard</a>
-      <div className="text-6xl text-center font-bold text-orange-200  transition ease-in-out delay-150 duration-1000 hover:text-teal-100 ">
-      
-          TALES AND PAGES
+    <div className=" flex flex-col items-center justify-center">
+      <a href="/login"  className="text-1xl text-center text-rose-200" >Log In</a>
+      <a href="/dashboard"  className="text-1xl text-center text-sky-200" >Dashboard</a>
+      <div className="group mt-24">
+          <div className="sm:text-6xl text-4xl text-center font-bold text-yellow-100 animation ease-in-out delay-150 duration-1000 group-hover:text-teal-100">
+            TALES AND PAGES
+          </div>
+          <div className="sm:text-6xl text-4xl  text-center font-bold text-amber-100 animation ease-in-out delay-150 duration-1000 group-hover:text-cyan-100 -mt-5 group-hover:-mt-3 ">
+            TALES AND PAGES
+          </div>
+          <div className="sm:text-6xl  text-4xl  text-center font-bold text-orange-100 animation ease-in-out delay-150 duration-1000 group-hover:text-sky-100 -mt-5 group-hover:-mt-3 ">
+            TALES AND PAGES
+          </div>
       </div>
+
     </div>
   );
 }

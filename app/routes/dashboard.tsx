@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLoaderData, Link } from '@remix-run/react';
-import { getSession } from "~/sessions"; // Ensure this is compatible with Cloudflare
+import { getSession } from "~/sessions"; 
+import ReactMarkdown from 'react-markdown';
 
 // Loader function remains the same
 export async function loader({ request }) {
@@ -15,19 +16,22 @@ export async function loader({ request }) {
 export default function Dashboard() {
   const { user, username } = useLoaderData();
   const [selectedPrompt, setSelectedPrompt] = useState('');
-  const [generatedResponse, setGeneratedResponse] = useState<string | null>(null);
+  const [generatedText, setgeneratedText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  
+
   const prompts = [
-    "A short story about an orange cat on a vacation.",
+    "A dragon and a cat discussing metaphysics on the beach.",
     "Recipe a cat will use to make biscuits.",
-    "Dialogue between two black cats of a witch."
+    "Artist cat exhibits a masterpiece to her alley friends.",
+    "Dialogue between two black cats of a witch at midnight on a full moon."
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setGeneratedResponse(null); // Reset previous response
+    setgeneratedText(null); // Reset previous response
 
     const response = await fetch('/generate-text', {
       method: 'POST',
@@ -37,48 +41,28 @@ export default function Dashboard() {
 
     if (response.ok) {
       const result = await response.json();
-      setGeneratedResponse(result.response);
+      setgeneratedText(result.response);
     } else {
       console.error('Failed to generate text');
     }
     setLoading(false);
   };
 
-  const formatResponse = (response) => {
-    const parts = response.split(/(\*\*.*?\*\*|".*?"|\d+\.\s?)/g);
-  
-    return parts.map((part, index) => {
-      if (part.match(/\*\*.*?\*\*/)) {
-        const boldText = part.replace(/\*\*(.*?)\*\*/, '$1');
-        return (
-          <React.Fragment key={index}>
-            <br />
-            <strong className="text-red-200">{boldText}</strong>
-            <br />
-          </React.Fragment>
-        );
-      }
-      
-      if (part.match(/".*?"/)) {
-        return (
-          <React.Fragment key={index}>
-            <strong>{part}</strong>
-          </React.Fragment>
-        );
-      }
-
-      if (part.match(/^\d+\.\s/)) {
-        return (
-          <React.Fragment key={index}>
-            <br />
-            <span className="ml-4">{part}</span>
-          </React.Fragment>
-        );
-      }
-  
-      return part; // Return normal text
-    });
+  const formatText = (text) => {
+    return (
+      <ReactMarkdown
+        components={{
+          h1: ({ children }) => <h1 className="text-3xl font-bold text-red-200">{children}</h1>,
+          h2: ({ children }) => <h2 className="text-2xl font-semibold text-red-200">{children}</h2>,
+          h3: ({ children }) => <h3 className="text-1xl font-semibold text-red-200">{children}</h3>,
+          strong: ({ children }) => <strong className="font-bold text-red-200">{children}</strong>,
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+    );
   };
+  
 
   if (!user) {
     return (
@@ -138,10 +122,12 @@ export default function Dashboard() {
         </div>
       )}
 
-      {generatedResponse && (
-        <div className="mt-4 p-4 mx-16 border border-orange-200">
-          <h3 className="text-1xl py-4 text-center font-bold text-red-200">{selectedPrompt}</h3>
-          <p className="text-1xl text-sky-200">{formatResponse(generatedResponse)}</p>
+      {generatedText && (
+        <div className="mt-4 p-4 mx-4 border border-orange-200 mb-24">
+          <h3 className="text-1xl py-4 text-center font-bold text-white bg-red-200 mb-6">{selectedPrompt}</h3>
+          
+          <div className="text-1xl text-sky-300">{formatText(generatedText)}
+          </div>
         </div>
       )}
     </div>
