@@ -13,11 +13,11 @@ export async function sendMagicLink(email: string) {
   const token = createToken({ email: email}, secret);
   const magicLink = `https://talesandpages.com/magic-link?token=${token}`;
 
-  console.log("Generated Magic Link:", magicLink); // Debugging log/
+  // console.log("Generated Magic Link:", magicLink); // Debugging log/
 
   await sendEmail({
     to: email,
-    subject: "Your Magic Login Link",
+    subject: "Login to Tales and Pages",
     html: `
     <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; max-width:600px;">
         <h1 style="text-align:center; background-color:#fde68a; color: white; padding: 40px 60px; margin-bottom:0;">

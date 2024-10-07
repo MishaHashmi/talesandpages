@@ -46,7 +46,7 @@ export default function LoginPage() {
     <div>
       <div className="text-2xl text-center text-orange-200 my-6">Log In</div>
       {message && <div className={`mb-2 text-center ${status === "success" ? "text-green-200" : "text-red-200"}`}>{message}</div>}
-      <Form method="post" className="flex flex-row sm:flex-col gap-2 items-center justify-center space-y-4 my-4">
+      <Form method="post" className="flex flex-col gap-2 items-center justify-center space-y-4 my-4">
         
         
         <input
