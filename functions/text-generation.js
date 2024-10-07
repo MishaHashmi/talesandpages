@@ -18,7 +18,6 @@ export async function onRequest(context) {
         // Call the Llama-3-1-8b-instruct model using the AI bindings
         const answer = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
             prompt: formattedPrompt, 
-            max_tokens: 100,    // Limit the response length
             temperature: 0.5,
         });
 
