@@ -17,13 +17,11 @@ export async function onRequest(context) {
 
         // Call the Llama-3-1-8b-instruct model using the AI bindings
         const answer = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
-            prompt: formattedPrompt, // User-provided formatted prompt
-            // Optional parameters can be added here
-            // stream: true, // Uncomment if you want to stream results
+            prompt: formattedPrompt, 
         });
 
         // Return the AI response
-        return new Response(JSON.stringify({ text: answer }), {
+        return new Response(JSON.stringify(answer), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });

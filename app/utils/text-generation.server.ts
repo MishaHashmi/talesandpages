@@ -16,5 +16,5 @@ export async function generateText(prompt: string): Promise<string> {
   }
 
   const answer = await response.json();
-  return answer.text;  // Adjust this based on how the response is structured in the Pages Function
+  return answer.response;  // Adjust this based on how the response is structured in the Pages Function
 }
