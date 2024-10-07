@@ -44,7 +44,7 @@ export default function LoginPage() {
 
   return (
     <div>
-      <div className="text-2xl text-center text-orange-200 my-6">Log In</div>
+      <div className="text-2xl text-center text-orange-300 my-6">Log In</div>
       {message && <div className={`mb-2 text-center ${status === "success" ? "text-green-200" : "text-red-200"}`}>{message}</div>}
       <Form method="post" className="flex flex-col gap-2 items-center justify-center space-y-4 my-4">
         
@@ -56,11 +56,11 @@ export default function LoginPage() {
           value={email}
           onChange={handleChange}
           required
-          className="placeholder-sky-200 text-orange-200 w-full max-w-xs px-4 py-2 border-b-2 border-orange-200 focus:outline-none focus:border-b-sky-200"
+          className="dark:bg-gray-800 placeholder-sky-200 dark:placeholder-sky-300 text-orange-200 dark:text-orange-300 w-full max-w-xs px-4 py-2 border-b-2 border-orange-200 dark:border-orange-300 focus:outline-none focus:border-b-sky-200 dark:focus:border-b-sky-300"
         />
         <button
           type="submit"
-          className="w-full max-w-xs px-4 py-2 bg-sky-200 text-white font-semibold rounded-lg hover:bg-orange-200 focus:outline-none"
+          className="w-full max-w-xs px-4 py-2 bg-sky-200 dark:bg-sky-300 text-white dark:text-white font-semibold rounded-lg hover:bg-orange-200 dark:hover:bg-orange-300 focus:outline-none"
         >
           Send Magic Link
         </button>
