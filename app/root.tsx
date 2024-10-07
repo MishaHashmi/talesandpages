@@ -29,7 +29,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="twitter:image" content="/talesandpages.png" />  
       </head>
       <body>
-      <div className="text-4xl text-center font-black bg-orange-100 text-white animation ease-in-out delay-150 duration-1000 hover:text-sky-200 hover:bg-amber-200 py-6 mb-6">
+      <div className="text-4xl text-center  bg-orange-100 text-white dark:text-white animation ease-in-out delay-150 duration-1000 hover:text-sky-200 hover:bg-amber-200 py-6 mb-6">
         <a href="/">TALES AND PAGES</a>
       </div>
         {children}

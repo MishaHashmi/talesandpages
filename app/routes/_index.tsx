@@ -13,7 +13,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div className=" flex flex-col items-center justify-center">
-      <a href="/login"  className="text-1xl text-center text-rose-200" >Log In</a>
+      <a href="/login"  className="text-1xl text-center text-rose-200 dark:text-red-600" >Log In</a>
       <a href="/dashboard"  className="text-1xl text-center text-sky-200" >Dashboard</a>
       <div className="group mt-24">
           <div className="sm:text-6xl text-4xl text-center font-bold text-yellow-100 animation ease-in-out delay-150 duration-1000 group-hover:text-teal-100">
