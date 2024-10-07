@@ -12,9 +12,12 @@ export async function onRequest(context) {
     }
 
     try {
+        // Create a formatted prompt that includes the role
+        const formattedPrompt = `Write a whimsical, friendly and cute story in markdown formatting. Follow the markdown formatting consistently. Begin stories immediately wihthout any preamble. Your prompt is: ${prompt}`;
+
         // Call the Llama-3-1-8b-instruct model using the AI bindings
         const answer = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
-            prompt: prompt, // User-provided prompt
+            prompt: formattedPrompt, // User-provided formatted prompt
             // Optional parameters can be added here
             // stream: true, // Uncomment if you want to stream results
         });

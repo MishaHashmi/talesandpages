@@ -10,7 +10,6 @@ database_id = "e193f2c8-ea3a-4b95-acd4-bcd1e5d10d36"
 
 [ai]
 binding = "AI"
-model_name = "llama-3-8b-instruct"
 
 
 
