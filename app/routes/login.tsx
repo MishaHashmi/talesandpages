@@ -56,7 +56,7 @@ export default function LoginPage() {
           value={email}
           onChange={handleChange}
           required
-          className="dark:bg-gray-800 placeholder-sky-200 dark:placeholder-sky-300 text-orange-200 dark:text-orange-300 w-full max-w-xs px-4 py-2 border-b-2 border-orange-200 dark:border-orange-300 focus:outline-none focus:border-b-sky-200 dark:focus:border-b-sky-300"
+          className="dark:bg-gray-800 placeholder-sky-200 dark:placeholder-sky-300 text-orange-200 dark:text-orange-300 rounded-none w-full max-w-xs px-4 py-2 border-b-2 border-orange-200 dark:border-orange-300 focus:outline-none focus:border-b-sky-200 dark:focus:border-b-sky-300"
         />
         <button
           type="submit"

@@ -14,12 +14,11 @@ export async function loader({ request }) {
 }
 
 export default function Dashboard() {
+
   const { user, username } = useLoaderData();
   const [selectedPrompt, setSelectedPrompt] = useState('');
-  const [generatedText, setgeneratedText] = useState<string | null>(null);
+  const [generatedText, setGeneratedText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  
 
   const prompts = [
     "A dragon and a cat discussing metaphysics on the beach.",
@@ -32,22 +31,75 @@ export default function Dashboard() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setgeneratedText(null); // Reset previous response
+    setGeneratedText(''); // Clear previous generated text
 
-    const response = await fetch('/generate-text', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: selectedPrompt }),
-    });
+    try {
+        const response = await fetch('/text-generation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: selectedPrompt }),
+        });
 
-    if (response.ok) {
-      const result = await response.json();
-      setgeneratedText(result.response);
-    } else {
-      console.error('Failed to generate text');
+        if (response.ok) {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let resultText = '';
+            let buffer = ''; // Buffer to hold partial data
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                buffer += chunk; // Accumulate chunk in buffer
+                
+                // Split buffer by newline and process each part
+                buffer.split('\n').forEach(async (line) => {
+                    if (line.startsWith('data:')) {
+                        let data = line.substring(5).trim();
+
+                        if (data) {
+                            // Check if [DONE] signal is received
+                            if (data === '[DONE]') {
+                                console.log('Streaming complete.');
+                                await reader.cancel(); // Closes the stream
+                                setLoading(false); // Stop loading indicator
+                                return;
+                            }
+
+                            // Attempt to parse if it's a valid complete JSON chunk
+                            try {
+                                // Try parsing, only if it's a complete JSON object
+                                if (data.endsWith('}')) {
+                                    const parsedData = JSON.parse(data);
+                                    resultText += parsedData.response || '';
+
+                                    // Update the generated text in real-time
+                                    setGeneratedText(prev => prev + parsedData.response); // Append new response part
+                                }
+                            } catch (error) {
+                                console.error('Error parsing data:', error);
+                            }
+                        }
+                    }
+                });
+
+                // Clear the buffer for the next set of chunks
+                buffer = '';
+            }
+        } else {
+            console.error('Failed to generate text', await response.text());
+        }
+    } catch (error) {
+        console.error('Error in fetch:', error);
+    } finally {
+        setLoading(false); // Ensure loading is stopped even if there's an error
     }
-    setLoading(false);
-  };
+};
+
+
+
+
 
   const formatText = (text) => {
     return (
@@ -63,7 +115,6 @@ export default function Dashboard() {
       </ReactMarkdown>
     );
   };
-  
 
   if (!user) {
     return (
@@ -127,8 +178,7 @@ export default function Dashboard() {
         <div className="mt-4 p-4 mx-4 border border-amber-200 mb-24">
           <h3 className="text-1xl py-4 text-center font-bold text-white bg-red-200 dark:bg-red-300 mb-6">{selectedPrompt}</h3>
           
-          <div className="text-1xl text-sky-300">{formatText(generatedText)}
-          </div>
+          <div className="text-1xl text-sky-300">{formatText(generatedText)}</div>
         </div>
       )}
     </div>
