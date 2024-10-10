@@ -1,14 +1,13 @@
 import { verifyToken } from "~/utils/token.server";
 import { createEmptySession, commitSession } from "~/sessions";
-import { getUserOrCreate } from "~/utils/database.server"; // Adjust the import path as necessary
+import { getUserOrCreate } from "~/utils/auth.out";
 
 export async function loader({ request }: { request: Request }): Promise<Response> {
   try {
-    // console.log("magic-link request ", request);
     const url = new URL(request.url);
-    // console.log("magic-link url ", url);
+  
     const token = url.searchParams.get("token");
-    // console.log("magic-link token: ", token);
+ 
 
     if (token) {
       const secret = import.meta.env.VITE_SESSION_SECRET;
@@ -20,9 +19,9 @@ export async function loader({ request }: { request: Request }): Promise<Respons
       const payload = verifyToken(token, secret);
 
       if (payload && payload.email) {
-        // Use database.server to get or create the user
+
         const user = await getUserOrCreate(payload.email);
-        const username = user.username; // Adjust based on how your user object is structured
+        const username = user.username; 
 
         // Create a session with email and username
         const session = createEmptySession();
