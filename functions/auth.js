@@ -2,10 +2,10 @@ import { handleUser } from './database';
 
 export async function onRequest(context) {
     const { request } = context;
-    const origin = request.headers.get('Origin');
-    if (origin && !origin.endsWith('talesandpages.com')) { 
-        return new Response('Unauthorized', { status: 403 });
-    }
+    // const origin = request.headers.get('Origin');
+    // if (origin && !origin.endsWith('talesandpages.com')) { 
+    //     return new Response('Unauthorized', { status: 403 });
+    // }
 
     const { email } = await request.json();  
     const user =handleUser(email, context);  
