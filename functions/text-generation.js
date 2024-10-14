@@ -8,7 +8,6 @@ export async function onRequest(context) {
     const cookies = parseCookies(cookieHeader);
     const authToken = cookies.authToken; 
 
-
     if (!authToken || !isValidToken(authToken, env.VITE_JWT_SECRET)) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,

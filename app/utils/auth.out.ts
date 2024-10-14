@@ -1,4 +1,4 @@
-
+// const PAGES_FUNCTIONS_URL = 'http://localhost:8788/auth'
 const PAGES_FUNCTIONS_URL = 'https://talesandpages.com/auth'; 
 
 export async function getUserOrCreate(email) {

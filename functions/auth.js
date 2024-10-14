@@ -17,7 +17,6 @@ export async function onRequest(context) {
 
 
     return new Response(JSON.stringify(user), {
-        status: 400,
         headers: { 
             'Set-Cookie': `authToken=${token}; HttpOnly; Secure; SameSite=Strict; ${expires}`,
             'Content-Type': 'application/json' },
