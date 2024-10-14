@@ -1,23 +1,18 @@
 export async function handleUser(email, context) {
   const db = context.env.DATABASE;  
 
-  if (!email) {
-      return new Response(JSON.stringify({ error: 'Email is required' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-      });
-  }
+  
   const [localPart, domainPart] = email.split('@');
   const username=localPart.split('+')[0];
-  const cleanEmail = `${cleanedLocalPart}@${domainPart}`;
+  const cleanEmail = `${username}@${domainPart}`;
   
   const user = await getUserByEmail(cleanEmail, db);
   if (user) {
-      return user;
+      return {user};
   } else {
-      const newUser = { cleanEmail, username };
+      const newUser = { email:cleanEmail, username };
       await createUser(newUser, db);
-      return newUser;
+      return {user:newUser};
   }
 }
 

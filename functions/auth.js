@@ -2,13 +2,22 @@ import { handleUser } from './database';
 
 export async function onRequest(context) {
     const { request } = context;
-    // const origin = request.headers.get('Origin');
-    // if (origin && !origin.endsWith('talesandpages.com')) { 
-    //     return new Response('Unauthorized', { status: 403 });
-    // }
+    const origin = request.headers.get('Origin');
+    if (origin && !origin.endsWith('talesandpages.com')) { 
+        return new Response('Unauthorized', { status: 403 });
+    }
 
     const { email } = await request.json();  
-    const user =handleUser(email, context);  
+
+    if (!email) {
+        return new Response(JSON.stringify({ error: 'Email is required' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+        });
+    }
+    
+    const result =handleUser(email, context);  
+    const user=(await result).user;
     const token = context.env.VITE_JWT_SECRET;
 
     const expirationDate = new Date();
