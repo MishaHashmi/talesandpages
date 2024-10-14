@@ -18,7 +18,7 @@ export async function onRequest(context) {
 
     return new Response(JSON.stringify(user), {
         headers: { 
-            'Set-Cookie': `authToken=${token}; HttpOnly; Secure; SameSite=Strict; ${expires}`,
+            'Set-Cookie': `authToken=${token}; HttpOnly; SameSite=None; Secure; ${expires}`,
             'Content-Type': 'application/json' },
     });
 }
