@@ -10,7 +10,7 @@ export async function loader({ request }) {
   const user = session.get("user");
   const username = session.get("username");
 
-  return { user, username }; // Return plain object instead of using json
+  return { user, username }; 
 }
 
 export default function Dashboard() {
@@ -31,13 +31,14 @@ export default function Dashboard() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setGeneratedText(''); // Clear previous generated text
+    setGeneratedText(''); 
 
     try {
         const response = await fetch('/text-generation', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ prompt: selectedPrompt }),
+            credentials: 'include', 
         });
 
         if (response.ok) {

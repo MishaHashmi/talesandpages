@@ -31,10 +31,10 @@ export default function LoginPage() {
     } else if (status === "invalid") {
       setMessage("Please enter a valid email address.");
     } else if (status === "success") {
-      setEmail(""); // Clear the email input
+      setEmail(""); 
       setMessage("Email sent. Check your inbox for Log In.");
     } else {
-      setMessage(""); // Clear the message if no status
+      setMessage(""); 
     }
   }, [status]);
 

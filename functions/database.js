@@ -7,20 +7,17 @@ export async function handleUser(email, context) {
           headers: { 'Content-Type': 'application/json' },
       });
   }
-
+  const [localPart, domainPart] = email.split('@');
+  const username=localPart.split('+')[0];
+  const cleanEmail = `${cleanedLocalPart}@${domainPart}`;
   
-  const user = await getUserByEmail(email, db);
+  const user = await getUserByEmail(cleanEmail, db);
   if (user) {
-      return new Response(JSON.stringify(user), {
-          headers: { 'Content-Type': 'application/json' },
-      });
+      return user;
   } else {
-      const username = email.split('@')[0];
-      const newUser = { email, username };
+      const newUser = { cleanEmail, username };
       await createUser(newUser, db);
-      return new Response(JSON.stringify(newUser), {
-          headers: { 'Content-Type': 'application/json' },
-      });
+      return newUser;
   }
 }
 
