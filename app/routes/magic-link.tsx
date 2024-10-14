@@ -5,23 +5,23 @@ import { getUserOrCreate } from "~/utils/auth.out";
 export async function loader({ request }: { request: Request }): Promise<Response> {
   try {
     const url = new URL(request.url);
-  
     const token = url.searchParams.get("token");
- 
 
     if (token) {
       const secret = import.meta.env.VITE_SESSION_SECRET;
       if (!secret) {
         console.error("SESSION_SECRET is not defined");
-        return Response.redirect("/login?status=error", 302);
+        return new Response("Error: SESSION_SECRET is not defined", {
+          status: 400,
+          headers: { "Content-Type": "text/plain" },
+        });
       }
 
       const payload = verifyToken(token, secret);
 
       if (payload && payload.email) {
-
         const user = await getUserOrCreate(payload.email);
-        const username = user.username; 
+        const username = user.username;
 
         // Create a session with email and username
         const session = createEmptySession();
@@ -38,11 +38,16 @@ export async function loader({ request }: { request: Request }): Promise<Respons
       }
     }
 
-    return Response.redirect("/login?status=invalid", 302);
+    return new Response("Error: Invalid token", {
+      status: 400,
+      headers: { "Content-Type": "text/plain" },
+    });
 
   } catch (error) {
     console.error("Error in loader:", error);
-    return Response.redirect("/login?status=error", 302);
+    return new Response(`Error: ${error.message}`, {
+      status: 500,
+      headers: { "Content-Type": "text/plain" },
+    });
   }
 }
-
