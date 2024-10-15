@@ -23,10 +23,16 @@ export async function loader({ request }: { request: Request }): Promise<Respons
         const user = await getUserOrCreate(payload.email);
         const username = user.username;
 
+        // Log the user details before redirecting
+        console.log("User:", user);
+
         // Create a session with email and username
         const session = createEmptySession();
         session.set("user", payload.email);
         session.set("username", username);
+
+        // Add a delay to ensure logs appear in the console before redirect
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // 2-second delay
 
         return new Response(null, {
           headers: {
@@ -45,6 +51,7 @@ export async function loader({ request }: { request: Request }): Promise<Respons
 
   } catch (error) {
     console.error("Error in loader:", error);
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Add a delay for error logging
     return new Response(`Error: ${error.message}`, {
       status: 500,
       headers: { "Content-Type": "text/plain" },

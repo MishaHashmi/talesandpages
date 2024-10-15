@@ -27,8 +27,11 @@ export async function onRequest(context) {
 
     return new Response(JSON.stringify(user), {
         headers: { 
-            'Set-Cookie': `authToken=${token}; HttpOnly; SameSite=Lax; Secure; ${expires}`,
-            'Content-Type': 'application/json' },
+            'Set-Cookie': `authToken=${token}; HttpOnly;SameSite=None; Secure; ${expires}`,
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'https://talesandpages.com', 
+            'Access-Control-Allow-Credentials': 'true',
+        },
     });
 }
 

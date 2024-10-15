@@ -18,7 +18,6 @@ export async function getUserOrCreate(email) {
   console.log("auth.out");
   console.log(response.status);
   console.log([...response.headers.entries()]);
-  // console.log(await response.text());
 
   const user = await response.json();
 
