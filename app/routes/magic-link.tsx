@@ -25,18 +25,15 @@ export async function loader({ request }: { request: Request }): Promise<Respons
 
         // Log the user details before redirecting
         console.log("User:", user);
+        console.log("User:", username);
 
-        // Create a session with email and username
-        const session = createEmptySession();
-        session.set("user", payload.email);
-        session.set("username", username);
-
+        // Instead of creating a session here, you would set it in the response from auth.js
         // Add a delay to ensure logs appear in the console before redirect
         await new Promise((resolve) => setTimeout(resolve, 2000)); // 2-second delay
 
+        // Returning a response that expects session cookies to be set in the auth.js call
         return new Response(null, {
           headers: {
-            // "Set-Cookie": await commitSession(session),
             "Location": "/dashboard",
           },
           status: 302,
