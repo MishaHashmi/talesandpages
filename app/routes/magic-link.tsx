@@ -1,5 +1,5 @@
 import { verifyToken } from "~/utils/token.server";
-import { createEmptySession, commitSession } from "~/sessions";
+// import { createEmptySession, commitSession } from "~/sessions";
 import { getUserOrCreate } from "~/utils/auth.out";
 
 export async function loader({ request }: { request: Request }): Promise<Response> {
@@ -36,7 +36,7 @@ export async function loader({ request }: { request: Request }): Promise<Respons
 
         return new Response(null, {
           headers: {
-            "Set-Cookie": await commitSession(session),
+            // "Set-Cookie": await commitSession(session),
             "Location": "/dashboard",
           },
           status: 302,

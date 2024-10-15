@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
 import { useLoaderData, Link } from '@remix-run/react';
-import { getSession } from "~/sessions"; 
+// import { getSession } from "~/sessions"; 
 import ReactMarkdown from 'react-markdown';
 
 // Loader function remains the same
 export async function loader({ request }) {
   const cookieHeader = request.headers.get("Cookie");
-  const session = await getSession(cookieHeader);
-  const user = session.get("user");
-  const username = session.get("username");
+
+  const cookies = Object.fromEntries(cookieHeader.split('; ').map(cookie => {
+    const [name, value] = cookie.split('=');
+    return [name, decodeURIComponent(value)];
+  }));
+  const sessionCookie = cookies['sessionCookie'];
+  const sessionData = JSON.parse(sessionCookie);
+  const { user, username } = sessionData.data;
+
+  console.log("dashboard.tsx");
+  console.log(user);
+  console.log(username);
+  // const session = await getSession(cookieHeader);
+  // const user = session.get("user");
+  // const username = session.get("username");
+  
 
   return { user, username }; 
 }
