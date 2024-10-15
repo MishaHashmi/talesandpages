@@ -26,17 +26,20 @@ export async function onRequest(context) {
 
 
     const authCookie = `authToken=${token}; HttpOnly; SameSite=None; Secure; ${expires}`;
-    const sessionCookie = `session=${JSON.stringify({ data: { user: user.email, username: user.username } })}; SameSite=None; Secure; ${expires}`;
+    const sessionCookie = `session=${JSON.stringify({ data: { user: email, username: user.username } })}; SameSite=None; Secure; ${expires}`;
+
+    
+    const combinedCookies = `${authCookie}, ${sessionCookie}`;
 
     return new Response(JSON.stringify(user), {
         headers: { 
-            'Set-Cookie': authCookie,
-            'Set-Cookie': sessionCookie,
+            'Set-Cookie': combinedCookies, 
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': 'https://talesandpages.com', 
             'Access-Control-Allow-Credentials': 'true',
         },
     });
+
 
     
 }

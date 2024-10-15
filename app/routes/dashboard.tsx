@@ -7,23 +7,29 @@ import ReactMarkdown from 'react-markdown';
 export async function loader({ request }) {
   const cookieHeader = request.headers.get("Cookie");
 
-  const cookies = Object.fromEntries(cookieHeader.split('; ').map(cookie => {
-    const [name, value] = cookie.split('=');
-    return [name, decodeURIComponent(value)];
-  }));
-  const sessionCookie = cookies['sessionCookie'];
-  const sessionData = JSON.parse(sessionCookie);
-  const { user, username } = sessionData.data;
-
-  console.log("dashboard.tsx");
-  console.log(user);
-  console.log(username);
-  // const session = await getSession(cookieHeader);
-  // const user = session.get("user");
-  // const username = session.get("username");
   
+  if(cookieHeader){
+    const cookies = Object.fromEntries(cookieHeader.split('; ').map(cookie => {
+      const [name, value] = cookie.split('=');
+      return [name, decodeURIComponent(value)];
+    }));
+    const sessionCookie = cookies['session'];
+    const sessionData = JSON.parse(sessionCookie);
+    const { user, username } = sessionData.data;
 
-  return { user, username }; 
+    console.log("dashboard.tsx");
+    console.log(user);
+    console.log(username);
+    // const session = await getSession(cookieHeader);
+    // const user = session.get("user");
+    // const username = session.get("username");
+    
+
+    return { user, username };
+  } 
+  else{
+    return {user:null, username:null}
+  }
 }
 
 export default function Dashboard() {
