@@ -4,16 +4,16 @@ export async function onRequest(context) {
     const { request, env } = context;
 
  
-    const cookieHeader = request.headers.get('Cookie') || '';
-    const cookies = parseCookies(cookieHeader);
-    const authToken = cookies.authToken; 
+    // const cookieHeader = request.headers.get('Cookie') || '';
+    // const cookies = parseCookies(cookieHeader);
+    // const authToken = cookies.authToken; 
 
-    if (!authToken || !isValidToken(authToken, env.VITE_JWT_SECRET)) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-            status: 401,
-            headers: { 'Content-Type': 'application/json' },
-        });
-    }
+    // if (!authToken || !isValidToken(authToken, env.VITE_JWT_SECRET)) {
+    //     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    //         status: 401,
+    //         headers: { 'Content-Type': 'application/json' },
+    //     });
+    // }
 
     const body = await request.json();
     const { prompt } = body;
@@ -34,14 +34,17 @@ export async function onRequest(context) {
         });
 
         return new Response(stream, {
-            headers: { 'Content-Type': 'text/event-stream' },
+            headers: { 'Content-Type': 'text/event-stream',
+                        'Set-Cookie': 'mew=Meow; SameSite=Lax' },
         });
 
     } catch (error) {
         console.error('Text generation failed:', error);
         return new Response(JSON.stringify({ error: 'Text generation failed: ' + error.message }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+            'Set-Cookie': 'meow=MEOW',
+        },
         });
     }
 }

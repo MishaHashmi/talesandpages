@@ -11,7 +11,7 @@ export async function sendMagicLink(email: string) {
   // Use the database server to find or create the user
   // const user = await getUserOrCreate(email);
   const token = createToken({ email: email}, secret);
-  const magicLink = `https://talesandpages.com/magic-link?token=${token}`;
+  const magicLink = `https://talesandpages.com/magiclink?token=${token}`;
 
   // console.log("Generated Magic Link:", magicLink); // Debugging log/
 

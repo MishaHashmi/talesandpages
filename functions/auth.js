@@ -2,10 +2,6 @@ import { handleUser } from './database';
 
 export async function onRequest(context) {
     const { request } = context;
-    const origin = request.headers.get('Origin');
-    if (origin && !origin.endsWith('talesandpages.com')) { 
-        return new Response('Unauthorized', { status: 403 });
-    }
 
     const { email } = await request.json();  
 
@@ -16,33 +12,27 @@ export async function onRequest(context) {
         });
     }
     
-    const result =handleUser(email, context);  
-    const user=(await result).user;
+    const result = await handleUser(email, context);  
+    const user = result.user;
     const token = context.env.VITE_JWT_SECRET;
 
-    const expirationDate = new Date();
-    expirationDate.setTime(expirationDate.getTime() + (7 * 24 * 60 * 60 * 1000));
-    const expires = `Expires=${expirationDate.toUTCString()};`;
-
-
-    const authCookie = `authToken=${token}; HttpOnly; SameSite=None; Secure; ${expires}`;
-    const sessionCookie = `session=${JSON.stringify({ data: { user: email, username: user.username } })}; SameSite=None; Secure; ${expires}`;
-
     
-    const combinedCookies = `${authCookie}, ${sessionCookie}`;
+    const maxAge = 7 * 24 * 60 * 60;
 
+
+    const authCookie = `authToken=${token}; Max-Age=${maxAge}; Path=/; HttpOnly; SameSite=None; Secure;`;
+    const sessionCookie = `session=${JSON.stringify({ data: { user: email, username: user.username } })}; Max-Age=${maxAge}; Path=/; SameSite=None; Secure;`;
+
+    // Set headers and append cookies using Cloudflare's Headers.append for multiple Set-Cookie
+    const headers = new Headers();
+    headers.append("Set-Cookie", authCookie);
+    headers.append("Set-Cookie", sessionCookie);
+    headers.append("Content-Type", "application/json");
+    headers.append("Access-Control-Allow-Origin", "https://talesandpages.com");
+    headers.append("Access-Control-Allow-Credentials", "true");
+
+    // Return the response with the appended headers
     return new Response(JSON.stringify(user), {
-        headers: { 
-            'Set-Cookie': combinedCookies, 
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': 'https://talesandpages.com', 
-            'Access-Control-Allow-Credentials': 'true',
-        },
+        headers,
     });
-
-
-    
 }
-
-
-
