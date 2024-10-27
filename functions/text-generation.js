@@ -4,16 +4,16 @@ export async function onRequest(context) {
     const { request, env } = context;
 
  
-    // const cookieHeader = request.headers.get('Cookie') || '';
-    // const cookies = parseCookies(cookieHeader);
-    // const authToken = cookies.authToken; 
+    const cookieHeader = request.headers.get('Cookie') || '';
+    const cookies = parseCookies(cookieHeader);
+    const authToken = cookies.authToken; 
 
-    // if (!authToken || !isValidToken(authToken, env.VITE_JWT_SECRET)) {
-    //     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-    //         status: 401,
-    //         headers: { 'Content-Type': 'application/json' },
-    //     });
-    // }
+    if (!authToken || !isValidToken(authToken, env.VITE_JWT_SECRET)) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' },
+        });
+    }
 
     const body = await request.json();
     const { prompt } = body;
@@ -26,7 +26,7 @@ export async function onRequest(context) {
     }
 
     try {
-        const formattedPrompt = `Write a whimsical, friendly and cute story in markdown formatting. Follow the markdown formatting consistently. Begin stories immediately without any preamble. Do not end the story suddenly. Your prompt is: ${prompt}`;
+        const formattedPrompt = `Write a whimsical, friendly and cute story in markdown formatting. Follow the markdown formatting consistently. Begin stories immediately without any preamble. Avoid ending it abruptly. Your prompt is: ${prompt}`;
 
         const stream = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
             prompt: formattedPrompt,
@@ -43,7 +43,7 @@ export async function onRequest(context) {
         return new Response(JSON.stringify({ error: 'Text generation failed: ' + error.message }), {
             status: 500,
             headers: { 'Content-Type': 'application/json',
-            'Set-Cookie': 'meow=MEOW',
+            
         },
         });
     }

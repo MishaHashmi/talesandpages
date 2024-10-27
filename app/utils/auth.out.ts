@@ -15,9 +15,7 @@ export async function getUserOrCreate(email) {
     throw new Error('Failed to fetch user from Pages function');
   }
 
-  // console.log("auth.out");
-  // console.log(response.status);
-  // console.log([...response.headers.entries()]);
+  
 
   const user = await response.json();
 

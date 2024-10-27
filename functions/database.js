@@ -6,6 +6,10 @@ export async function handleUser(email, context) {
   const username=localPart.split('+')[0];
   const cleanEmail = `${username}@${domainPart}`;
   
+  if(domainPart !== 'talesandpages.com'){
+    const newUser = {email:null, username:null}
+    return {user:newUser}
+  }
   const user = await getUserByEmail(cleanEmail, db);
   if (user) {
       return {user};

@@ -13,7 +13,7 @@ export async function sendMagicLink(email: string) {
   const token = createToken({ email: email}, secret);
   const magicLink = `https://talesandpages.com/magiclink?token=${token}`;
 
-  // console.log("Generated Magic Link:", magicLink); // Debugging log/
+  
 
   await sendEmail({
     to: email,
