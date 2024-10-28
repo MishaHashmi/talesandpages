@@ -4,6 +4,7 @@ import { Resend } from 'resend';
 
 
 
+
 export async function sendMagicLink(email: string) {
   const secret = import.meta.env.VITE_SESSION_SECRET;
   if (!secret) {
@@ -18,10 +19,11 @@ export async function sendMagicLink(email: string) {
 
   const resend = new Resend(import.meta.env.VITE_RESEND_API_KEY);
   
+  
   await resend.emails.send({
     from: 'login@talesandpages.com',
     to: email,
     subject: 'Login to Tales and Pages',
-    react: await Email(magicLink),
+    html:Email(magicLink),
   });
 }
