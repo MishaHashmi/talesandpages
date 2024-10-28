@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLoaderData, Link } from '@remix-run/react';
-// import { getSession } from "~/sessions"; 
+
 import ReactMarkdown from 'react-markdown';
 
 // Loader function remains the same
@@ -14,14 +14,14 @@ export async function loader({ request }) {
       return [name, decodeURIComponent(value)];
     }));
     const sessionCookie = cookies['session'];
-    const sessionData = JSON.parse(sessionCookie);
-    const { user, username } = sessionData.data;
+    const user = JSON.parse(sessionCookie);
+    
 
   
    
     
 
-    return { user, username };
+    return { user:user.email, username:user.username };
   } 
   else{
     return {user:null, username:null}

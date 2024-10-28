@@ -1,5 +1,5 @@
 
-
+import {verifyToken} from './cookie';
 export async function onRequest(context) {
     const { request, env } = context;
 
@@ -7,8 +7,13 @@ export async function onRequest(context) {
     const cookieHeader = request.headers.get('Cookie') || '';
     const cookies = parseCookies(cookieHeader);
     const authToken = cookies.authToken; 
+    
+    const user=await verifyToken(authToken, context.env.VITE_JWT_SECRET);
+    // console.log("t-g user", user);
 
-    if (!authToken || !isValidToken(authToken, env.VITE_JWT_SECRET)) {
+
+
+    if (!authToken || !user) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
             status: 401,
             headers: { 'Content-Type': 'application/json' },
@@ -34,8 +39,7 @@ export async function onRequest(context) {
         });
 
         return new Response(stream, {
-            headers: { 'Content-Type': 'text/event-stream',
-                        'Set-Cookie': 'mew=Meow; SameSite=Lax' },
+            headers: { 'Content-Type': 'text/event-stream' },
         });
 
     } catch (error) {
@@ -50,9 +54,7 @@ export async function onRequest(context) {
 }
 
 
-function isValidToken(token, secret) {
-    return token===secret;
-}
+
 
 function parseCookies(cookieHeader) {
     return cookieHeader.split('; ').reduce((cookies, cookie) => {

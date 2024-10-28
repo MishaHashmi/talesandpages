@@ -1,4 +1,5 @@
 import { handleUser } from './database'; 
+import {createToken} from './cookie';
 
 export async function onRequest(context) {
     const { request } = context;
@@ -14,14 +15,16 @@ export async function onRequest(context) {
     
     const result = await handleUser(email, context);  
     const user = result.user;
-    const token = context.env.VITE_JWT_SECRET;
+    const token = await createToken(JSON.stringify(user), context.env.VITE_JWT_SECRET);
+
+    
 
     
     const maxAge = 7 * 24 * 60 * 60;
 
 
     const authCookie = `authToken=${token}; Max-Age=${maxAge}; Path=/; HttpOnly; SameSite=None; Secure;`;
-    const sessionCookie = `session=${JSON.stringify({ data: { user: email, username: user.username } })}; Max-Age=${maxAge}; Path=/; SameSite=None; Secure;`;
+    const sessionCookie = `session=${JSON.stringify(user)}; Max-Age=${maxAge}; Path=/; SameSite=None; Secure;`;
 
     // Set headers and append cookies using Cloudflare's Headers.append for multiple Set-Cookie
     const headers = new Headers();

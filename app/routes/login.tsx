@@ -1,5 +1,5 @@
 import { Form, useSearchParams } from "@remix-run/react";
-import { sendMagicLink } from "~/utils/auth.server";
+import { sendMagicLink } from "~/utils/sendEmail";
 import { useEffect, useState } from "react";
 
 export const action = async ({ request }: { request: Request }) => {
