@@ -3,7 +3,7 @@ import { useLoaderData, Link } from '@remix-run/react';
 
 import ReactMarkdown from 'react-markdown';
 
-// Loader function remains the same
+
 export async function loader({ request }) {
   const cookieHeader = request.headers.get("Cookie");
 
@@ -60,38 +60,38 @@ export default function Dashboard() {
             const reader = response.body.getReader();
             const decoder = new TextDecoder("utf-8");
             let resultText = '';
-            let buffer = ''; // Buffer to hold partial data
+            let buffer = ''; 
 
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
                 const chunk = decoder.decode(value, { stream: true });
-                buffer += chunk; // Accumulate chunk in buffer
+                buffer += chunk; 
                 
-                // Split buffer by newline and process each part
+                
                 buffer.split('\n').forEach(async (line) => {
                     if (line.startsWith('data:')) {
                         let data = line.substring(5).trim();
 
                         if (data) {
-                            // Check if [DONE] signal is received
+                            
                             if (data === '[DONE]') {
                                 console.log('Streaming complete.');
-                                await reader.cancel(); // Closes the stream
-                                setLoading(false); // Stop loading indicator
+                                await reader.cancel(); 
+                                setLoading(false); 
                                 return;
                             }
 
-                            // Attempt to parse if it's a valid complete JSON chunk
+                            
                             try {
-                                // Try parsing, only if it's a complete JSON object
+                                
                                 if (data.endsWith('}')) {
                                     const parsedData = JSON.parse(data);
                                     resultText += parsedData.response || '';
 
-                                    // Update the generated text in real-time
-                                    setGeneratedText(prev => prev + parsedData.response); // Append new response part
+                                    
+                                    setGeneratedText(prev => prev + parsedData.response); 
                                 }
                             } catch (error) {
                                 console.error('Error parsing data:', error);
@@ -100,7 +100,7 @@ export default function Dashboard() {
                     }
                 });
 
-                // Clear the buffer for the next set of chunks
+                
                 buffer = '';
             }
         } else {
@@ -109,7 +109,7 @@ export default function Dashboard() {
     } catch (error) {
         console.error('Error in fetch:', error);
     } finally {
-        setLoading(false); // Ensure loading is stopped even if there's an error
+        setLoading(false); 
     }
 };
 

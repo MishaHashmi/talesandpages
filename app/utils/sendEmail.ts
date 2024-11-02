@@ -1,4 +1,4 @@
-import { createToken } from "./token.server";
+import { createToken } from "./token";
 import { Email } from "./email";
 import { Resend } from 'resend';
 

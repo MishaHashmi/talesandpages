@@ -1,4 +1,4 @@
-import { verifyToken } from "~/utils/token.server";
+import { verifyToken } from "~/utils/token";
 import { useLoaderData } from '@remix-run/react';
 import React from 'react';
 
@@ -25,8 +25,7 @@ export async function loader({ request }) {
 export default function Magiclink() {
   const { payload, email } = useLoaderData();
 
-  // Call to /auth can be done here
-  // Using useEffect to handle the fetch call
+ 
   React.useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -48,7 +47,7 @@ export default function Magiclink() {
     };
 
     fetchUser();
-  }, [email]); // Dependency array includes email
+  }, [email]); 
 
   return (
     <div>

@@ -9,7 +9,6 @@ export async function onRequest(context) {
     const authToken = cookies.authToken; 
     
     const user=await verifyToken(authToken, context.env.VITE_JWT_SECRET);
-    // console.log("t-g user", user);
 
 
 
