@@ -15,7 +15,7 @@ export async function onRequest(context) {
     
     const result = await handleUser(email, context);  
     const user = result.user;
-    const token = await createToken(JSON.stringify(user), context.env.VITE_JWT_SECRET);
+    const token = await createToken(user, context.env.VITE_JWT_SECRET);
 
     
 

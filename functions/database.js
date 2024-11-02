@@ -17,6 +17,8 @@ export async function saveStory(title, content, email, context) {
 
 
 export async function getStories(email, context) {
+  console.log("database.js email", email);
+
   const db = context.env.DATABASE; 
   try {
     

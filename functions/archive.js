@@ -2,16 +2,17 @@ import { verifyToken } from './cookie';
 import { getStories, saveStory } from './database'; // Import your functions from database.js
 
 export async function onRequest(context) {
-    console.log("archive.js");
-    const { request, env } = context;
+
+    const { request } = context;
 
     const cookieHeader = request.headers.get('Cookie') || '';
     const cookies = parseCookies(cookieHeader);
     const authToken = cookies.authToken; 
     
     // Verify user token
-    const user = await verifyToken(authToken, env.VITE_JWT_SECRET);
-    console.log(user);
+    console.log()
+    const user = verifyToken(authToken, context.env.VITE_JWT_SECRET);
+    console.log("type of..",typeof(user), user);
 
     if (!authToken || !user) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
