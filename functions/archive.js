@@ -1,5 +1,5 @@
 import { verifyToken } from './cookie';
-import { getStories, saveStory } from './database'; // Import your functions from database.js
+import { getStories, saveStory, createStoriesTable } from './database'; 
 
 export async function onRequest(context) {
     const { request } = context;
@@ -8,9 +8,9 @@ export async function onRequest(context) {
     const cookies = parseCookies(cookieHeader);
     const authToken = cookies.authToken; 
     
-    // Verify user token
+    
     const user = verifyToken(authToken, context.env.VITE_JWT_SECRET);
-    console.log("type of user:", typeof(user), user);
+    
 
     if (!authToken || !user) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -20,12 +20,14 @@ export async function onRequest(context) {
     }
 
     const body = await request.json();
-    const action = body.action;
+    
+    const action = body.call;
 
-    if (action === 'get') {
-        // Handle story retrieval
+    if (action === 'retrieve') {
+        console.log("retrieve");
         try {
             const stories = await getStories(user.email, context);
+            console.log(stories);
             return new Response(JSON.stringify(stories), {
                 headers: { 'Content-Type': 'application/json' },
             });

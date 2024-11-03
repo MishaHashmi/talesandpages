@@ -24,7 +24,6 @@ export default function Archive() {
     const [selectedStory, setSelectedStory] = useState(null);
     const [stories, setStories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchStories = async () => {
@@ -32,23 +31,21 @@ export default function Archive() {
 
             try {
                 const response = await fetch('/archive', {
-                    method: 'POST', // Change method to POST
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ call: 'retrieve' }),
                     credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json', // Specify content type
-                    },
-                    body: JSON.stringify({ action: 'get' }), // Send action in body
+                    redirect: 'manual',
                 });
 
                 if (response.ok) {
                     const storiesData = await response.json();
                     setStories(storiesData);
                 } else {
-                    setError(await response.text());
+            
                 }
             } catch (error) {
                 console.error('Error in fetch:', error);
-                setError('Failed to fetch stories.');
             } finally {
                 setLoading(false);
             }
@@ -90,7 +87,7 @@ export default function Archive() {
                                         key={story.id}
                                         onClick={() => setSelectedStory(story)}
                                         aria-label={`Select story: ${story.title}`}
-                                        className={`cursor-pointer p-2 rounded-md ${selectedStory?.id === story.id ? 'bg-sky-200 dark:bg-sky-300' : 'bg-transparent'} hover:bg-sky-100 dark:hover:bg-sky-800`}
+                                        className={`cursor-pointer p-2 rounded-md ${selectedStory?.id === story.id ? 'bg-sky-200 dark:bg-sky-300' : 'bg-transparent'} text-white hover:bg-sky-100 dark:hover:bg-sky-300`}
                                     >
                                         {story.title}
                                     </li>
@@ -111,7 +108,6 @@ export default function Archive() {
                     )}
                 </div>
             </div>
-            {error && <p className="text-red-500">{error}</p>}
         </div>
     );
 }

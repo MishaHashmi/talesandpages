@@ -4,7 +4,7 @@ export async function saveStory(title, content, email, context) {
 
   try {
     const stmt = db
-      .prepare(`INSERT INTO stories (title, story, user) VALUES (?, ?, ?)`)
+      .prepare(`INSERT INTO stories (title, story, email) VALUES (?, ?, ?)`)
       .bind(title, content, email);
 
     await stmt.run();
@@ -17,17 +17,17 @@ export async function saveStory(title, content, email, context) {
 
 
 export async function getStories(email, context) {
-  console.log("database.js email", email);
+  
 
   const db = context.env.DATABASE; 
   try {
     
     const stmt = db
-      .prepare(`SELECT * FROM stories WHERE user = ?`)
+      .prepare(`SELECT * FROM stories WHERE email = ?`)
       .bind(email);
 
     
-    const results = await stmt.all();
+    const {results} = await stmt.all();
 
     return results;
   } catch (error) {
@@ -71,4 +71,22 @@ async function getUserByEmail(email, db) {
 async function createUser(user, db) {
   const query = `INSERT INTO users (email, username) VALUES (?, ?)`;
   await db.prepare(query).bind(user.email, user.username).run();
+}
+
+
+export async function createStoriesTable(context) {
+  
+  const db = context.env.DATABASE; 
+  
+  // const query = `
+  //     CREATE TABLE IF NOT EXISTS stories (
+  //         title TEXT NOT NULL,
+  //         story TEXT NOT NULL,
+  //         email TEXT NOT NULL
+  //     );
+  // `;
+
+  // await db.prepare(query).run();
+  const {me}= await db.prepare("SELECT * FROM stories").run();
+  return me;
 }
