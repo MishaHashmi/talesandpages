@@ -2,7 +2,6 @@ import { verifyToken } from './cookie';
 import { getStories, saveStory } from './database'; // Import your functions from database.js
 
 export async function onRequest(context) {
-
     const { request } = context;
 
     const cookieHeader = request.headers.get('Cookie') || '';
@@ -10,9 +9,8 @@ export async function onRequest(context) {
     const authToken = cookies.authToken; 
     
     // Verify user token
-    console.log()
     const user = verifyToken(authToken, context.env.VITE_JWT_SECRET);
-    console.log("type of..",typeof(user), user);
+    console.log("type of user:", typeof(user), user);
 
     if (!authToken || !user) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -21,10 +19,10 @@ export async function onRequest(context) {
         });
     }
 
-    // Determine the request method
-    const method = request.method;
+    const body = await request.json();
+    const action = body.action;
 
-    if (method === 'GET') {
+    if (action === 'get') {
         // Handle story retrieval
         try {
             const stories = await getStories(user.email, context);
@@ -38,9 +36,7 @@ export async function onRequest(context) {
                 headers: { 'Content-Type': 'application/json' },
             });
         }
-    } else if (method === 'POST') {
-        // Handle story saving
-        const body = await request.json();
+    } else if (action === 'save') {
         const { title, content } = body;
 
         if (!title || !content) {
@@ -50,6 +46,7 @@ export async function onRequest(context) {
             });
         }
 
+        // Handle story saving
         try {
             await saveStory(user.email, title, content, context); // Assuming saveStory takes email, title, and content
             return new Response(JSON.stringify({ message: 'Story saved successfully' }), {
@@ -64,9 +61,9 @@ export async function onRequest(context) {
             });
         }
     } else {
-        // Method Not Allowed
-        return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-            status: 405,
+        // Invalid action
+        return new Response(JSON.stringify({ error: 'Invalid action' }), {
+            status: 400,
             headers: { 'Content-Type': 'application/json' },
         });
     }

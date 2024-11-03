@@ -32,8 +32,12 @@ export default function Archive() {
 
             try {
                 const response = await fetch('/archive', {
-                    method: 'GET',
+                    method: 'POST', // Change method to POST
                     credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json', // Specify content type
+                    },
+                    body: JSON.stringify({ action: 'get' }), // Send action in body
                 });
 
                 if (response.ok) {
