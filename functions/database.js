@@ -1,11 +1,11 @@
 
-export async function saveStory(title, content, email, context) {
+export async function saveStory(title, story, email, context) {
   const db = context.env.DATABASE; 
 
   try {
     const stmt = db
       .prepare(`INSERT INTO stories (title, story, email) VALUES (?, ?, ?)`)
-      .bind(title, content, email);
+      .bind(title, story, email);
 
     await stmt.run();
     return { success: true, message: "Story saved successfully" };

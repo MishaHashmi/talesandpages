@@ -27,7 +27,7 @@ export async function onRequest(context) {
         console.log("retrieve");
         try {
             const stories = await getStories(user.email, context);
-            console.log(stories);
+            // console.log(stories);
             return new Response(JSON.stringify(stories), {
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -39,10 +39,11 @@ export async function onRequest(context) {
             });
         }
     } else if (action === 'save') {
-        const { title, content } = body;
-
-        if (!title || !content) {
-            return new Response(JSON.stringify({ error: 'Title and content are required' }), {
+        
+        const { title, story } = body;
+        // console.log(title, user.email);
+        if (!title || !story) {
+            return new Response(JSON.stringify({ error: 'Title and story are required' }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -50,7 +51,8 @@ export async function onRequest(context) {
 
         // Handle story saving
         try {
-            await saveStory(user.email, title, content, context); // Assuming saveStory takes email, title, and content
+            console.log(user.email, title)
+            await saveStory(user.email, title, story, context); 
             return new Response(JSON.stringify({ message: 'Story saved successfully' }), {
                 status: 201,
                 headers: { 'Content-Type': 'application/json' },
@@ -63,7 +65,7 @@ export async function onRequest(context) {
             });
         }
     } else {
-        // Invalid action
+
         return new Response(JSON.stringify({ error: 'Invalid action' }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' },

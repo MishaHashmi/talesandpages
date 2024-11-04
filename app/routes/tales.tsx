@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLoaderData, Link } from '@remix-run/react';
+import ReactMarkdown from 'react-markdown';
 import { verifyToken } from "~/utils/token";
 
 export async function loader({ request }) {
@@ -35,7 +36,6 @@ export default function Archive() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ call: 'retrieve' }),
                     credentials: 'include',
-                    redirect: 'manual',
                 });
 
                 if (response.ok) {
@@ -55,6 +55,19 @@ export default function Archive() {
             fetchStories();
         }
     }, [user]);
+
+    const formatText = (text) => (
+        <ReactMarkdown
+          components={{
+            h1: ({ children }) => <h1 className="text-3xl font-bold text-rose-300">{children}</h1>,
+            h2: ({ children }) => <h2 className="text-2xl font-semibold text-rose-300">{children}</h2>,
+            h3: ({ children }) => <h3 className="text-1xl font-semibold text-rose-300">{children}</h3>,
+            strong: ({ children }) => <strong className="font-bold text-rose-300">{children}</strong>,
+          }}
+        >
+          {text}
+        </ReactMarkdown>
+      );
 
     if (!user) {
         return (
@@ -87,12 +100,13 @@ export default function Archive() {
                                         key={story.id}
                                         onClick={() => setSelectedStory(story)}
                                         aria-label={`Select story: ${story.title}`}
-                                        className={`cursor-pointer p-2 rounded-md ${selectedStory?.id === story.id ? 'bg-sky-200 dark:bg-sky-300' : 'bg-transparent'} text-white hover:bg-sky-100 dark:hover:bg-sky-300`}
+                                        className={`cursor-pointer p-2 rounded-md border ${selectedStory?.id === story.id ? 'bg-sky-300 text-white' : 'bg-transparent text-sky-300'} border-sky-300 hover:bg-sky-100 dark:hover:bg-sky-300`}
                                     >
                                         {story.title}
                                     </li>
                                 ))}
                             </ul>
+
                         )
                     )}
                 </div>
@@ -100,8 +114,8 @@ export default function Archive() {
                 <div className="p-4 md:w-2/3">
                     {selectedStory ? (
                         <>
-                            <h3 className="text-lg font-bold text-amber-200 dark:text-amber-300 mb-2">{selectedStory.title}</h3>
-                            <p className="text-gray-700 dark:text-gray-300">{selectedStory.story}</p>
+                            <h3 className="text-2xl font-bold text-center text-white bg-rose-300 mb-2">{selectedStory.title}</h3>
+                            <p className="text-1xl text-sky-300">{formatText(selectedStory.story)}</p>
                         </>
                     ) : (
                         <p className="text-gray-600 dark:text-gray-400">Select a story to view its content</p>

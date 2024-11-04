@@ -1,39 +1,31 @@
 import React, { useState } from 'react';
 import { useLoaderData, Link } from '@remix-run/react';
-
 import ReactMarkdown from 'react-markdown';
-
 
 export async function loader({ request }) {
   const cookieHeader = request.headers.get("Cookie");
 
-  
-  if(cookieHeader){
+  if (cookieHeader) {
     const cookies = Object.fromEntries(cookieHeader.split('; ').map(cookie => {
       const [name, value] = cookie.split('=');
       return [name, decodeURIComponent(value)];
     }));
     const sessionCookie = cookies['session'];
     const user = JSON.parse(sessionCookie);
-    
 
-  
-   
-    
-
-    return { user:user.email, username:user.username };
-  } 
-  else{
-    return {user:null, username:null}
+    return { user: user.email, username: user.username };
+  } else {
+    return { user: null, username: null };
   }
 }
 
 export default function Dashboard() {
-
   const { user, username } = useLoaderData();
   const [selectedPrompt, setSelectedPrompt] = useState('');
   const [generatedText, setGeneratedText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [isStorySaved, setIsStorySaved] = useState(false);
 
   const prompts = [
     "A dragon and a cat discussing metaphysics on the beach.",
@@ -47,6 +39,7 @@ export default function Dashboard() {
     e.preventDefault();
     setLoading(true);
     setGeneratedText(''); 
+    setIsStorySaved(false); // Reset the saved state when generating a new story
 
     try {
         const response = await fetch('/text-generation', {
@@ -69,13 +62,11 @@ export default function Dashboard() {
                 const chunk = decoder.decode(value, { stream: true });
                 buffer += chunk; 
                 
-                
                 buffer.split('\n').forEach(async (line) => {
                     if (line.startsWith('data:')) {
                         let data = line.substring(5).trim();
 
                         if (data) {
-                            
                             if (data === '[DONE]') {
                                 console.log('Streaming complete.');
                                 await reader.cancel(); 
@@ -83,14 +74,11 @@ export default function Dashboard() {
                                 return;
                             }
 
-                            
                             try {
-                                
                                 if (data.endsWith('}')) {
                                     const parsedData = JSON.parse(data);
                                     resultText += parsedData.response || '';
 
-                                    
                                     setGeneratedText(prev => prev + parsedData.response); 
                                 }
                             } catch (error) {
@@ -100,7 +88,6 @@ export default function Dashboard() {
                     }
                 });
 
-                
                 buffer = '';
             }
         } else {
@@ -111,30 +98,46 @@ export default function Dashboard() {
     } finally {
         setLoading(false); 
     }
-};
-
-
-
-
-
-  const formatText = (text) => {
-    return (
-      <ReactMarkdown
-        components={{
-          h1: ({ children }) => <h1 className="text-3xl font-bold text-rose-300">{children}</h1>,
-          h2: ({ children }) => <h2 className="text-2xl font-semibold text-rose-300">{children}</h2>,
-          h3: ({ children }) => <h3 className="text-1xl font-semibold text-rose-300">{children}</h3>,
-          strong: ({ children }) => <strong className="font-bold text-rose-300">{children}</strong>,
-        }}
-      >
-        {text}
-      </ReactMarkdown>
-    );
   };
 
+  const saveStory = async () => {
+    setSaveLoading(true);
 
+    try {
+      const response = await fetch('/archive', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ call:'save', title: selectedPrompt, story: generatedText }),
+        credentials: 'include',
+      });
 
+      if (response.ok) {
+        alert("Story saved successfully!");
+        setIsStorySaved(true); // Set story saved state to true
+      } else {
+        console.error("Failed to save story", await response.text());
+        alert("Failed to save the story. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error saving story:", error);
+      alert("An error occurred while saving the story.");
+    } finally {
+      setSaveLoading(false);
+    }
+  };
 
+  const formatText = (text) => (
+    <ReactMarkdown
+      components={{
+        h1: ({ children }) => <h1 className="text-3xl font-bold text-rose-300">{children}</h1>,
+        h2: ({ children }) => <h2 className="text-2xl font-semibold text-rose-300">{children}</h2>,
+        h3: ({ children }) => <h3 className="text-1xl font-semibold text-rose-300">{children}</h3>,
+        strong: ({ children }) => <strong className="font-bold text-rose-300">{children}</strong>,
+      }}
+    >
+      {text}
+    </ReactMarkdown>
+  );
 
   if (!user) {
     return (
@@ -199,6 +202,18 @@ export default function Dashboard() {
           <h3 className="text-1xl py-4 text-center font-bold text-white bg-red-200 dark:bg-red-300 mb-6">{selectedPrompt}</h3>
           
           <div className="text-1xl text-sky-300">{formatText(generatedText)}</div>
+          <div class="flex justify-center">
+
+            <button
+              onClick={saveStory}
+              disabled={saveLoading || isStorySaved}
+              className={`w-full max-w-xs text-center px-4 py-2 mt-4 bg-red-200 dark:bg-red-300 text-white font-semibold rounded-lg hover:bg-rose-300 focus:outline-none ${
+                saveLoading || isStorySaved ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {isStorySaved ? "Story Saved" : saveLoading ? "Saving..." : "Save Story"}
+            </button>
+          </div>
         </div>
       )}
     </div>

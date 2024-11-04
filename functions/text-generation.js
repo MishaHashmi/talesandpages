@@ -10,7 +10,6 @@ export async function onRequest(context) {
     
     const user=await verifyToken(authToken, context.env.VITE_JWT_SECRET);
 
-    console.log("t-g", request);
 
     if (!authToken || !user) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
