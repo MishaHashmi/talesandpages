@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLoaderData, Link } from '@remix-run/react';
 import ReactMarkdown from 'react-markdown';
 import { verifyToken } from "~/utils/token";
+import SlideMenu from '~/components/menu';
 
 export async function loader({ request }) {
     const cookieHeader = request.headers.get("Cookie");
@@ -80,19 +81,21 @@ export default function Archive() {
 
     return (
         <div>
-            <h1 className="text-2xl text-center text-amber-200 dark:text-amber-300">Archive</h1>
-            <h2 className="text-1xl text-center font-bold text-sky-200 dark:text-sky-300">{username}</h2>
-            <p className="text-center font-bold text-sky-200 dark:text-sky-300">{user}</p>
-            <Link to="/logout" className="block text-center text-rose-300">Logout</Link>
+            <SlideMenu username={username} user={user} />
+            <h1 className="text-2xl text-center text-amber-200 dark:text-amber-300">Tales</h1>
+            <h2 className="text-1xl text-center font-bold text-red-200 dark:text-red-300">{username}</h2>
+            {/* <p className="text-center font-bold text-sky-200 dark:text-sky-300">{user}</p> */}
+
+            {/* <Link to="/logout" className="block text-center text-rose-300">Logout</Link> */}
         
             <div className="flex flex-col md:flex-row mt-4">
                 <div className="flex-shrink-0 p-4 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-300">
-                    <h3 className="text-lg font-bold text-sky-200 dark:text-sky-300 mb-2">Your Stories</h3>
+                    <h3 className="text-lg font-bold text-sky-200 dark:text-sky-300 mb-2">Your Tales</h3>
                     {loading ? (
-                        <p className="text-gray-600 dark:text-gray-400">Loading stories...</p>
+                        <p className="text-gray-600 dark:text-gray-400">Loading saved tales...</p>
                     ) : (
                         stories.length === 0 ? (
-                            <p className="text-gray-600 dark:text-gray-400">No stories found in your archive.</p>
+                            <p className="text-gray-600 dark:text-gray-400">No tales found in your archive.</p>
                         ) : (
                             <ul className="space-y-2">
                                 {stories.map((story) => (
@@ -114,11 +117,11 @@ export default function Archive() {
                 <div className="p-4 md:w-2/3">
                     {selectedStory ? (
                         <>
-                            <h3 className="text-2xl font-bold text-center text-white bg-rose-300 mb-2">{selectedStory.title}</h3>
+                            <h3 className="text-1xl py-4 font-bold text-center text-white bg-red-200 mb-4">{selectedStory.title}</h3>
                             <p className="text-1xl text-sky-300">{formatText(selectedStory.story)}</p>
                         </>
                     ) : (
-                        <p className="text-gray-600 dark:text-gray-400">Select a story to view its content</p>
+                        <p className="text-gray-600 dark:text-gray-400 mt-8">Select a story to view its content</p>
                     )}
                 </div>
             </div>

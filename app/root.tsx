@@ -32,6 +32,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <div className="text-4xl text-center font-black bg-orange-100 dark:bg-sky-300 text-white dark:text-white animation ease-in-out delay-150 duration-1000 hover:text-sky-200 dark:hover:text-sky-300 hover:bg-amber-200  py-6 mb-6">
         <a href="/">TALES AND PAGES</a>
       </div>
+      {/* <div className="flex justify-end">
+      <h2 className="text-1xl text-center font-bold text-sky-200 dark:text-sky-300">{username}</h2>
+      <p className="text-center font-bold text-sky-200 dark:text-sky-300">{user}</p>
+        <Link to="/dashboard" className="block text-center text-amber-300">Dashboard</Link>
+        <Link to="/tales" className="block text-center text-rose-300">Tales</Link>
+        <Link to="/logout" className="block text-center text-rose-300">Logout</Link>
+      </div> */}
         {children}
         <ScrollRestoration />
         <Scripts />

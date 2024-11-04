@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useLoaderData, Link } from '@remix-run/react';
 import ReactMarkdown from 'react-markdown';
 
+import SlideMenu from '~/components/menu';
+
 export async function loader({ request }) {
   const cookieHeader = request.headers.get("Cookie");
 
@@ -150,10 +152,11 @@ export default function Dashboard() {
 
   return (
     <div>
+      <SlideMenu username={username} user={user} />
       <h1 className="text-2xl text-center text-amber-200 dark:text-amber-300">Welcome to your dashboard!</h1>
-      <h2 className="text-1xl text-center font-bold text-sky-200 dark:text-sky-300">{username}</h2>
-      <p className="text-center font-bold text-sky-200 dark:text-sky-300">{user}</p>
-      <Link to="/logout" className="block text-center text-rose-300">Logout</Link>
+      <h2 className="text-1xl text-center font-bold text-red-200 dark:text-red-300">{username}</h2> 
+      {/* <p className="text-center font-bold text-sky-200 dark:text-sky-300">{user}</p>
+      <Link to="/logout" className="block text-center text-rose-300">Logout</Link> } */}
 
       <h2 className="text-2xl text-center text-amber-200 dark:text-amber-300 mt-6">You can select a prompt to generate your story.</h2>
       
