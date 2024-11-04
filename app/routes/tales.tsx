@@ -100,7 +100,7 @@ export default function Archive() {
                                         key={story.id}
                                         onClick={() => setSelectedStory(story)}
                                         aria-label={`Select story: ${story.title}`}
-                                        className={`cursor-pointer p-2 rounded-md border ${selectedStory?.id === story.id ? 'bg-sky-300 text-white' : 'bg-transparent text-sky-300'} border-sky-300 hover:bg-sky-100 dark:hover:bg-sky-300`}
+                                        className={`cursor-pointer p-2 rounded-md border ${selectedStory?.title === story.title ? 'bg-sky-300 text-white' : 'bg-transparent text-sky-300'} border-sky-300 hover:bg-sky-100 dark:hover:bg-sky-300`}
                                     >
                                         {story.title}
                                     </li>

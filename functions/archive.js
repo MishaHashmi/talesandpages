@@ -52,7 +52,7 @@ export async function onRequest(context) {
         // Handle story saving
         try {
             console.log(user.email, title)
-            await saveStory(user.email, title, story, context); 
+            await saveStory( title, story, user.email, context); 
             return new Response(JSON.stringify({ message: 'Story saved successfully' }), {
                 status: 201,
                 headers: { 'Content-Type': 'application/json' },
