@@ -32,7 +32,7 @@ export default function LoginPage() {
       setMessage("Please enter a valid email address.");
     } else if (status === "success") {
       setEmail(""); 
-      setMessage("Email sent. Check your inbox for Log In.");
+      setMessage("Email sent. Check your inbox for Log In please.");
     } else {
       setMessage(""); 
     }
