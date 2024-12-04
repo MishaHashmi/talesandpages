@@ -27,7 +27,7 @@ export default function Index() {
           </div>
       </div>
       <div>
-        <img src="screenshot.png">
+        <img src="/screenshot.png" />
       </div>
     </div>
   );
