@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useLoaderData, Link } from '@remix-run/react';
+import { useLoaderData, Link, useNavigate } from '@remix-run/react';
 import ReactMarkdown from 'react-markdown';
 import { verifyToken } from "~/utils/token";
 import SlideMenu from '~/components/menu';
 
 export async function loader({ request }) {
     const cookieHeader = request.headers.get("Cookie");
-  
     if (cookieHeader) {
         const cookies = Object.fromEntries(cookieHeader.split('; ').map(cookie => {
             const [name, value] = cookie.split('=');
@@ -14,7 +13,6 @@ export async function loader({ request }) {
         }));
         const authCookie = cookies['authToken'];
         const user = verifyToken(authCookie, import.meta.env.VITE_JWT_SECRET);
-      
         return { user: user.email, username: user.username };
     } else {
         return { user: null, username: null };
@@ -26,11 +24,11 @@ export default function Archive() {
     const [selectedStory, setSelectedStory] = useState(null);
     const [stories, setStories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchStories = async () => {
             setLoading(true);
-
             try {
                 const response = await fetch('/archive', {
                     method: 'POST',
@@ -38,12 +36,11 @@ export default function Archive() {
                     body: JSON.stringify({ call: 'retrieve' }),
                     credentials: 'include',
                 });
-
                 if (response.ok) {
                     const storiesData = await response.json();
+                    console.log("tales",storiesData);
                     setStories(storiesData);
-                } else {
-            
+                    
                 }
             } catch (error) {
                 console.error('Error in fetch:', error);
@@ -68,7 +65,11 @@ export default function Archive() {
         >
           {text}
         </ReactMarkdown>
-      );
+    );
+
+    const handleGenerateImages = (storyId) => {
+        navigate(`/stories/${storyId}/generate-images`);
+    };
 
     if (!user) {
         return (
@@ -84,10 +85,6 @@ export default function Archive() {
             <SlideMenu username={username} user={user} />
             <h1 className="text-2xl text-center text-amber-200 dark:text-amber-300">Tales</h1>
             <h2 className="text-1xl text-center font-bold text-red-200 dark:text-red-300">{username}</h2>
-            {/* <p className="text-center font-bold text-sky-200 dark:text-sky-300">{user}</p> */}
-
-            {/* <Link to="/logout" className="block text-center text-rose-300">Logout</Link> */}
-        
             <div className="flex flex-col md:flex-row mt-4">
                 <div className="flex-shrink-0 p-4 md:w-1/3 border-b md:border-b-0 md:border-r border-gray-300">
                     <h3 className="text-lg font-bold text-sky-200 dark:text-sky-300 mb-2">Your Tales</h3>
@@ -99,17 +96,12 @@ export default function Archive() {
                         ) : (
                             <ul className="space-y-2">
                                 {stories.map((story) => (
-                                    <li
-                                        key={story.id}
-                                        onClick={() => setSelectedStory(story)}
-                                        aria-label={`Select story: ${story.title}`}
-                                        className={`cursor-pointer p-2 rounded-md border ${selectedStory?.title === story.title ? 'bg-sky-300 text-white' : 'bg-transparent text-sky-300'} border-sky-300 hover:bg-sky-100 dark:hover:bg-sky-300`}
-                                    >
-                                        {story.title}
+                                    <li key={story.id} className="p-2 border rounded-md border-sky-300">
+                                        <p onClick={() => setSelectedStory(story)} className="cursor-pointer text-sky-300">{story.title}</p>
+                                        <button onClick={() => handleGenerateImages(story.id)} className="text-sm text-sky-300 hover:underline">Generate Images</button>
                                     </li>
                                 ))}
                             </ul>
-
                         )
                     )}
                 </div>

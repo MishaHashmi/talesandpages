@@ -26,7 +26,12 @@ export default function Index() {
             TALES AND PAGES
           </div>
       </div>
-      <img src="/screenshot.png" />
+
+      <div className=" flex flex-col items-center justify-center  mt-24">
+        <div className="text-center bg-sky-300 m-2 p-2 text-white">Demo: tale generation</div>
+        <img className="w-3/4 box-border border-2 rounded-md border-rose-200 dark:border-rose-300 " src="/screenshot.png" />
+      </div>
+      
     </div>
   );
 }

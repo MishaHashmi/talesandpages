@@ -24,7 +24,7 @@ export async function onRequest(context) {
     const action = body.call;
 
     if (action === 'retrieve') {
-        console.log("retrieve");
+        // console.log("retrieve");
         try {
             const stories = await getStories(user.email, context);
             // console.log(stories);
