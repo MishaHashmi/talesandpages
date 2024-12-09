@@ -26,7 +26,7 @@ export default function Index() {
             TALES AND PAGES
           </div>
       </div>
-
+      <img src="/screenshot.png" />
     </div>
   );
 }
